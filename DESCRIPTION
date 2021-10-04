@@ -1,0 +1,14 @@
+Package: ukmap
+Type: Package
+Title: Create Maps of the UK
+Version: 0.1.0
+Author: Piers York
+Maintainer: Piers York <piersyork+ukmap@gmail.com>
+Description: Obtain UK maps data and easily create choropleth maps.
+Imports: RCurl, SPARQL, XML
+License: MIT
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.1.1
+Depends: 
+    R (>= 2.10)
