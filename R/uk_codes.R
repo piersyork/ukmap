@@ -4,20 +4,24 @@
 #'
 #' @return A character vector of area codes
 #'
-#' @import RCurl XML
+#' @import dplyr
 #' @export
 #'
 #' @examples
 #' uk_codes("E09")
-uk_codes <- function(type) {
-  SPARQL::SPARQL(url = "http://statistics.data.gov.uk/sparql.xml", query =
-                   paste0(
+uk_codes <- function(type, within = NULL) {
+  if (!is.null(within)) {
+    within <- paste0("FILTER (?within = <http://statistics.data.gov.uk/id/statistical-geography/", within,">)")
+  } else within <- ""
+  ons_query(
+    query = paste0(
 'PREFIX wkt: <http://www.opengis.net/ont/geosparql#asWKT>
 PREFIX label: <http://www.w3.org/2000/01/rdf-schema#label>
 PREFIX name: <http://statistics.data.gov.uk/def/statistical-geography#officialname>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX member: <http://publishmydata.com/def/ontology/foi/memberOf>
 PREFIX active: <http://publishmydata.com/def/ontology/foi/active>
+PREFIX within: <http://publishmydata.com/def/ontology/foi/within>
 
 SELECT DISTINCT ?label ?name
 
@@ -25,10 +29,11 @@ WHERE {
 	?o label: ?label ;
   	   name: ?name  ;
        active: ?active ;
-	   member: ?member .
+       within: ?within ;
+	     member: ?member .
   FILTER (', paste0("?member = <http://statistics.data.gov.uk/def/geography/collection/", type, ">", collapse = " || "), ')
-  FILTER (?active = TRUE)
-}'))$results %>%
+  FILTER (?active = TRUE)\n', within, '
+}')) %>%
     rename(area_code = label, area_name = name)
 }
 
@@ -41,16 +46,24 @@ WHERE {
 #' @export
 #'
 #' @examples
-add_codes <- function(uk_codes, type) {
+add_codes <- function(uk_codes, type, within = NULL) {
   if (is.data.frame(uk_codes)) {
     rbind(
       uk_codes,
-      uk_codes(type)
+      uk_codes(type, within)
     )
   } else {
-    c(uk_codes, uk_codes(type))
+    c(uk_codes, uk_codes(type, within))
   }
 
+}
+
+remove_codes <- function(uk_codes, area_codes) {
+  if (is.data.frame(uk_codes)) {
+    uk_codes[!uk_codes$area_code %in% area_codes,]
+  } else {
+    uk_codes[!uk_codes %in% area_codes]
+  }
 }
 
 #' Return the Area Name for a given Area Code
@@ -61,9 +74,9 @@ add_codes <- function(uk_codes, type) {
 #' @export
 #'
 find_area_name <- function(area_code) {
-  SPARQL::SPARQL(url = "http://statistics.data.gov.uk/sparql.xml", query =
-                   paste0(
-                     'PREFIX label: <http://www.w3.org/2000/01/rdf-schema#label>
+  ons_query(
+    query = paste0(
+'PREFIX label: <http://www.w3.org/2000/01/rdf-schema#label>
 PREFIX name: <http://statistics.data.gov.uk/def/statistical-geography#officialname>
 
 SELECT DISTINCT ?label ?name
@@ -72,7 +85,7 @@ WHERE {
 	?o label: ?label ;
   	   name: ?name  .
   FILTER (?label = "', area_code, '")
-}'))$results %>%
+}')) %>%
     rename(area_code = label, area_name = name)
 }
 
@@ -94,9 +107,9 @@ find_area_names <- function(area_codes) {
     indices <- c(seq(1, length(area_codes), 50), length(area_codes))
     results <- list()
     for (i in 1:(length(indices) - 1)) {
-      results[[i]] <- SPARQL::SPARQL(url = "http://statistics.data.gov.uk/sparql.xml", query =
-                                       paste0(
-                                         'PREFIX label: <http://www.w3.org/2000/01/rdf-schema#label>
+      results[[i]] <- ons_query(
+        query = paste0(
+'PREFIX label: <http://www.w3.org/2000/01/rdf-schema#label>
 PREFIX name: <http://statistics.data.gov.uk/def/statistical-geography#officialname>
 
 SELECT DISTINCT ?label ?name
@@ -105,7 +118,7 @@ WHERE {
 	?o label: ?label ;
   	   name: ?name  .
   FILTER (', paste0('?label = ', '"', area_codes[indices[i]:indices[i+1]], '"', collapse = " || "), ')
-}'))$results %>%
+}')) %>%
         rename(area_code = label, area_name = name)
     }
     bind_rows(results)

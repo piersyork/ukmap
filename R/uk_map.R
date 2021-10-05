@@ -5,6 +5,8 @@
 #' @return The boundary data for the area code with class "sfc"
 #' @export
 #'
+#' @import dplyr
+#'
 get_boundary <- function(area_code) {
   raw <- readLines(paste0("http://statistics.data.gov.uk/sparql.json?query=DESCRIBE+%3Chttp://statistics.data.gov.uk/id/statistical-geography/", area_code, "/geometry%3E"))
   wkt_raw <- raw[2] %>%
@@ -57,8 +59,8 @@ uk_map <- function(area_codes) {
   boundaries[sapply(boundaries, is.null)] <- NULL
   close(pb)
   names <- find_area_names(area_codes)
-  sf::st_sf(boundary = Reduce(c, boundaries)) %>%
-    mutate(area_code = area_codes[-null_indices]) %>%
-    right_join(names, by = "area_code") %>%
+  sf_data <- sf::st_sf(boundary = Reduce(c, boundaries))
+  sf_data$area_code <- if (length(null_indices) == 0) area_codes else area_codes[-null_indices]
+  sf_data %>% left_join(names, by = "area_code") %>%
     sf::st_make_valid()
 }

@@ -5,7 +5,7 @@ Version: 0.1.0
 Author: Piers York
 Maintainer: Piers York <piersyork+ukmap@gmail.com>
 Description: Obtain UK maps data and easily create choropleth maps.
-Imports: RCurl, SPARQL, XML
+Imports: RCurl, SPARQL, XML, sf, dplyr
 License: MIT
 Encoding: UTF-8
 LazyData: true
