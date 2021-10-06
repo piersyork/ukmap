@@ -4,10 +4,14 @@
 \alias{add_codes}
 \title{Add More ONS Codes for an area type}
 \usage{
-add_codes(uk_codes, type)
+add_codes(uk_codes, type, within = NULL)
 }
 \arguments{
-\item{type}{}
+\item{uk_codes}{Either a vector of ONS codes or a dataframe returned by uk_codes()}
+
+\item{type}{The area type to add codes for.}
+
+\item{within}{Limit the codes returned to within a broader area. E.g. Local authorities within the North East}
 }
 \value{
 

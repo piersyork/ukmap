@@ -4,10 +4,12 @@
 \alias{uk_codes}
 \title{Get ONS area codes for UK area types}
 \usage{
-uk_codes(type)
+uk_codes(type, within = NULL)
 }
 \arguments{
 \item{type}{The Area Collection Code to get area codes for. E.g. "E09" for London Boroughs. All possible collection codes area available at http://statistics.data.gov.uk/atlas}
+
+\item{within}{Limit the codes returned to within a broader area. E.g. Local authorities within the North East}
 }
 \value{
 A character vector of area codes
