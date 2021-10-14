@@ -15,3 +15,8 @@ uk_map(area_codes)
 \description{
 Get map data for UK Area
 }
+\examples{
+
+uk_map(uk_codes("E09"))
+
+}

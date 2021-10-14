@@ -11,6 +11,11 @@
 #' @examples
 #' uk_codes("E09")
 uk_codes <- function(type, within = NULL) {
+
+  if (!nchar(type) == 3) {
+    type <- uk_entity_search(type, exact = TRUE)
+  }
+
   if (!is.null(within)) {
     within <- paste0("FILTER (?within = <http://statistics.data.gov.uk/id/statistical-geography/", within,">)")
   } else within <- ""
@@ -133,3 +138,37 @@ WHERE {
     bind_rows(results)
   }
 }
+
+#' Find names and codes of UK area entities
+#'
+#' @param term Either an area entity code or and an entity name
+#' @param exact If true then only exact matches to a search term will be returned and will be returned as a single string. If false then any regular expression matches to the search term will be returned.
+#'
+#' @return If an area code is given then the area name will be returned, if a character string is given then a tibble of entity codes and the entity names that match the string will be returned.
+#' @export
+#'
+#' @examples
+#' uk_entity_search("E09") # returns the string "London Boroughs"
+#'
+#' uk_entity_search("London Boroughs", exact = TRUE) # return the string "E09"
+#'
+#' uk_entity_search("Super Output Areas") # returns a tibble where entity name matches the search term
+#'
+uk_entity_search <- function(term = "", exact = FALSE) {
+  entity_codes <- readRDS(system.file("extdata", "entity_codes.rds", package = "ukmap"))
+
+  if (nchar(term) == 3) {
+    return(entity_codes$entity_name[entity_codes$entity_code == term])
+  } else if (nchar(term) > 3) {
+    if (exact) {
+      return(entity_codes$entity_code[entity_codes$entity_name == term])
+    } else {
+      out <- entity_codes[grep(term, entity_codes$entity_name, ignore.case = TRUE), ]
+      return(out)
+    }
+  } else if (term == "") {
+    return(entity_codes)
+  }
+}
+
+
