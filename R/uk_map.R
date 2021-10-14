@@ -13,8 +13,7 @@ get_boundary <- function(area_code) {
     stringr::str_remove(paste0('<http://statistics.data.gov.uk/id/statistical-geography/', area_code, '/geometry> <http://www.opengis.net/ont/geosparql#asWKT> "')) %>%
     stringr::str_remove('"\\^\\^<http://www.opengis.net/ont/geosparql#wktLiteral> .')
 
-  wkt <- rgeos::readWKT(wkt_raw)
-  sfc_out <- sf::st_as_sfc(wkt)
+  sfc_out <- sf::st_as_sfc(wkt_raw)
   return(sfc_out)
 }
 
@@ -26,6 +25,9 @@ get_boundary <- function(area_code) {
 #' @export
 #'
 #' @examples
+#'
+#' uk_map(uk_codes("E09"))
+#'
 uk_map <- function(area_codes) {
 
   if (is.data.frame(area_codes)) {
