@@ -12,7 +12,7 @@ uk_codes(type, within = NULL)
 \item{within}{Limit the codes returned to within a broader area. E.g. Local authorities within the North East}
 }
 \value{
-A character vector of area codes
+A data.frame of area codes
 }
 \description{
 Get ONS area codes for UK area types

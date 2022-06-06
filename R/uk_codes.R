@@ -3,7 +3,7 @@
 #' @param type The Area Collection Code to get area codes for. E.g. "E09" for London Boroughs. All possible collection codes area available at http://statistics.data.gov.uk/atlas
 #' @param within Limit the codes returned to within a broader area. E.g. Local authorities within the North East
 #'
-#' @return A character vector of area codes
+#' @return A data.frame of area codes
 #'
 #' @import dplyr
 #' @export
@@ -49,7 +49,7 @@ WHERE {
 #' @param type The area type to add codes for.
 #' @param within Limit the codes returned to within a broader area. E.g. Local authorities within the North East
 #'
-#' @return
+#' @return A data.frame or vector of area codes
 #' @export
 #'
 add_codes <- function(uk_codes, type, within = NULL) {
@@ -69,7 +69,7 @@ add_codes <- function(uk_codes, type, within = NULL) {
 #' @param uk_codes Either a vector of ONS codes or a dataframe returned by uk_codes()
 #' @param area_codes The ONS codes to remove
 #'
-#' @return
+#' @return A data.frame or vector of area codes
 #' @export
 #'
 remove_codes <- function(uk_codes, area_codes) {

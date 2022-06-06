@@ -12,7 +12,7 @@ remove_codes(uk_codes, area_codes)
 \item{area_codes}{The ONS codes to remove}
 }
 \value{
-
+A data.frame or vector of area codes
 }
 \description{
 Remove code from selection

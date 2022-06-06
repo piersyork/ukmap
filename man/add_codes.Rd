@@ -14,7 +14,7 @@ add_codes(uk_codes, type, within = NULL)
 \item{within}{Limit the codes returned to within a broader area. E.g. Local authorities within the North East}
 }
 \value{
-
+A data.frame or vector of area codes
 }
 \description{
 Add More ONS Codes for an area type

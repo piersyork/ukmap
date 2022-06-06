@@ -10,7 +10,7 @@ uk_map(area_codes)
 \item{area_codes}{The ONS area codes to be included in the map.}
 }
 \value{
-
+Boundary data for eaech area code
 }
 \description{
 Get map data for UK Area

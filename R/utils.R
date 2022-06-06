@@ -1,3 +1,6 @@
+### declare global variables
+globalVariables(c("label", "name", "URLencode", "txtProgressBar", "setTxtProgressBar"))
+
 #' Internal function for making SPARQL queries to gov API
 #'
 #' @param query A SPARQL query

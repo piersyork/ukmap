@@ -21,7 +21,7 @@ get_boundary <- function(area_code) {
 #'
 #' @param area_codes The ONS area codes to be included in the map.
 #'
-#' @return
+#' @return Boundary data for eaech area code
 #' @export
 #'
 #' @examples
