@@ -37,11 +37,27 @@ The core function of ukmap is `uk_map()` which takes an area code or vector of a
 library(ukmap)
 
 # get map data for london boroughs
-london <- uk_codes("E09") %>% 
+london <- uk_codes("E09") |> 
   uk_map()
 
 # use the tmap package to easily see what the map data looks like
 tmap::qtm(london)
 
 ```
+
+You are able to pass the area code column of a dataframe to `uk_map()` to make the process of getting map data easier.
+
+```{r example2, warning=FALSE, message=FALSE}
+
+london_unemployment <- uk_unemployment |> 
+  filter(grepl("^E09", area_code))   # area codes that start E09 are London boroughs
+
+map_data <- uk_map(london_unemployment$area_code) # get the boundaries for the area codes in london_unemployment
+
+map_data |> 
+  left_join(london_unemployment, by = "area_code") |> # join london_unemployment to map_data
+  tmap::qtm(fill = "unemployment_rate")
+
+```
+
 
