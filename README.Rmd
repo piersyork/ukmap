@@ -60,4 +60,13 @@ map_data |>
 
 ```
 
+## TO-DO
+- [ ] Add caching of map data
+- [ ] Fix invalid polygons
+- [ ] Create easy way to merge map data to dataframe containing area codes
+- [ ] Find if there is a way to speed up querying boundary data 
+
+
+
+
 
